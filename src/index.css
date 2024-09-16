@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  @apply bg-slate-900 p-4
+}
+
+@layer utilities {
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 128px);
+    grid-gap: 16px;
+    justify-items: center;
+    align-items: center;
+  }
+
+  .card {
+    display: inline-grid;
+    justify-items: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .card-back,
+  .card-front {
+    backface-visibility: hidden;
+    transition: transform 0.25s ease;
+    width: 128px;
+    grid-column: 1;
+    grid-row: 1;
+    user-select: none;
+  }
+
+  .card-back:hover {
+    transform: scale(1.1);
+  }
+
+  .card-front {
+    transform: rotateY(180deg) scale(1.15);
+  }
+
+  .card-back.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .card-front.flipped {
+    transform: rotateY(360deg) scale(1.5);
+  }
+
+  .card-front.matched {
+    transform: rotateY(360deg) scale(1.15);
+  }
+
+}

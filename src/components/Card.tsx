@@ -1,13 +1,25 @@
 import { Dispatch, MutableRefObject, useEffect, useRef } from "react";
+import { Character } from "../types";
 
 interface CardProps {
   cardName: string;
+  character: Character;
+  asc15: boolean;
   cardsFlipped: string[];
   setCardsFlipped: Dispatch<string[]>;
   triesLeft: MutableRefObject<number>
+  restart: boolean;
 }
 
-const Card = ({ cardName, cardsFlipped, setCardsFlipped, triesLeft }: CardProps) => {
+const Card = ({
+  cardName,
+  character,
+  asc15,
+  cardsFlipped,
+  setCardsFlipped,
+  triesLeft,
+  restart
+}: CardProps) => {
   const cardBackRef = useRef<HTMLImageElement|null>(null)
   const cardFrontRef = useRef<HTMLImageElement|null>(null)
   const isFlipped = useRef<boolean>(false)
@@ -24,7 +36,9 @@ const Card = ({ cardName, cardsFlipped, setCardsFlipped, triesLeft }: CardProps)
   const faceDown = () => {
     cardBackRef.current?.classList.remove("flipped")
     cardFrontRef.current?.classList.remove("flipped")
+    cardFrontRef.current?.classList.remove("matched")
     isFlipped.current = false
+    isMatched.current = false
   }
 
   const handleClick = () => {
@@ -35,17 +49,24 @@ const Card = ({ cardName, cardsFlipped, setCardsFlipped, triesLeft }: CardProps)
       setCardsFlipped(cardsFlipped.concat(cardName))
       if (cardsFlipped.length == 1) triesLeft.current -= 1
     }
-
   }
+
+  useEffect(() => {
+    if (isFlipped.current) {
+      console.log("Resetting")
+      faceDown()
+    }
+    cardBackRef.current?.classList.remove("reset-anim")
+    cardBackRef.current?.classList.add("reset-anim")
+  }, [character, asc15, restart])
 
   useEffect(() => {
     if (cardsFlipped.length == 2) {
       if (cardsFlipped[0] === cardsFlipped[1]) {
-        if (cardName === cardsFlipped[0]) {
+        if (isFlipped.current && cardName === cardsFlipped[0]) {
           isMatched.current = true
           setTimeout(() => {
-            cardFrontRef.current?.classList.remove("flipped")
-            cardFrontRef.current?.classList.add("matched")
+            cardFrontRef.current?.classList.replace("flipped", "matched")
             setCardsFlipped([])
           }, faceDownMs)
         }
@@ -62,17 +83,21 @@ const Card = ({ cardName, cardsFlipped, setCardsFlipped, triesLeft }: CardProps)
 
   return (
     <div
-      className="card"
+      className="card text-xs"
       onClick={ handleClick }
     >
       <img
         src="/assets/cardback.png"
-        className="card card-back"
+        alt="Card Back"
+        width={ 128 }
+        className="card card-back w-full"
         ref={ cardBackRef }
       />
       <img
         src={ `/assets/${cardName}` }
-        className="card card-front"
+        alt={ cardName }
+        width={ 128 }
+        className="card card-front w-full"
         ref={ cardFrontRef }
       />
     </div>

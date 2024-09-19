@@ -4,14 +4,18 @@
 
 
 body {
-  @apply bg-slate-900 p-4
+  background: #354030;
+  font-family: "Kreon", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
-@layer utilities {
+@layer components {
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(4, 128px);
-    grid-gap: 16px;
+    grid-template-columns: repeat(4, 96px);
+    grid-gap: 16px 48px;
     justify-items: center;
     align-items: center;
   }
@@ -27,30 +31,59 @@ body {
   .card-front {
     backface-visibility: hidden;
     transition: transform 0.25s ease;
-    width: 128px;
     grid-column: 1;
     grid-row: 1;
     user-select: none;
+    filter: drop-shadow(4px 4px 1px #222);
   }
 
   .card-back:hover {
     transform: scale(1.1);
   }
 
-  .card-front {
-    transform: rotateY(180deg) scale(1.15);
+  .card-back {
+    transform: rotateY(0deg);
   }
 
   .card-back.flipped {
     transform: rotateY(180deg);
   }
 
+  .card-front {
+    transform: rotateY(180deg) scale(1.15);
+  }
+
   .card-front.flipped {
     transform: rotateY(360deg) scale(1.5);
+    z-index: 999;
   }
 
   .card-front.matched {
     transform: rotateY(360deg) scale(1.15);
   }
 
+  .card-back.reset-anim {
+    animation: 1s reset-cards cubic-bezier(.22,.61,.36,1);
+  }
+
+  @keyframes reset-cards {
+    from {
+      backface-visibility: visible;
+      transform: rotateX(0deg);
+    }
+    to   {
+      backface-visibility: visible;
+      transform: rotateX(360deg);
+    }
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 2px 2px 1px #222;
+  }
+
+  .text-shadow-none {
+    text-shadow: initial;
+  }
 }

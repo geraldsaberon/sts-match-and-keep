@@ -9,23 +9,24 @@ import { TRIES } from "./variables"
 function App() {
   const [cardsFlipped, setCardsFlipped] = useState<string[]>([])
   const [character, setCharacter] = useState<Character>("ironclad")
-  const [asc15, setAsc15] = useState<boolean>(false)
-  const cards = useRef<string[]>([])
-  const triesLeftRef = useRef<number>(TRIES)
   const [restart, setRestart] = useState<boolean>(false)
+  const [asc15, setAsc15] = useState<boolean>(false)
+  const triesLeftRef = useRef<number>(TRIES)
+  const cards = useRef<string[]>([])
 
   useEffect(() => {
     cards.current = prepareCards(character, asc15)
+    triesLeftRef.current = TRIES
     setCardsFlipped([])
     console.log("Prepared new cards for", character)
-  }, [character, asc15])
+  }, [character, asc15, restart])
 
-  useEffect(() => {
-    cards.current = prepareCards(character, asc15)
-    setCardsFlipped([])
-    setRestart(false)
-    console.log("Restarting")
-  }, [restart, character, asc15])
+  const handleReset = () => {
+    if (!triesLeftRef.current) {
+      setRestart(x => !x)
+      triesLeftRef.current = TRIES
+    }
+  }
 
   return (
     <div className="flex flex-col items-center space-y-16">
@@ -43,7 +44,7 @@ function App() {
             asc15={ asc15 }
             cardsFlipped={ cardsFlipped }
             setCardsFlipped={ setCardsFlipped }
-            triesLeft={ triesLeftRef }
+            triesLeftRef={ triesLeftRef }
             restart={ restart }
           />
         ))}
@@ -54,8 +55,7 @@ function App() {
           <div>
             <ResetButton
               text="Again"
-              setRestart={ setRestart }
-              triesLeftRef={ triesLeftRef }
+              handleReset={ handleReset }
             />
           </div>
         }

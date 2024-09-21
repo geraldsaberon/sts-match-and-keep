@@ -29,10 +29,15 @@ const TopBar = ({ setCharacter, asc15, setAsc15 }: TopBarProps) => {
               className="bg-transparent cursor-pointer text-shadow"
               onChange={ handleCharacterSelect }
             >
-              <option className="bg-slate-500 border-2 border-red-500 text-shadow-none" value="ironclad">ironclad</option>
-              <option className="bg-slate-500 border-2 border-red-500 text-shadow-none" value="silent">silent</option>
-              <option className="bg-slate-500 border-2 border-red-500 text-shadow-none" value="defect">defect</option>
-              <option className="bg-slate-500 border-2 border-red-500 text-shadow-none" value="watcher">watcher</option>
+              {["ironclad","silent","defect","watcher",].map(character => (
+                <option
+                  key={ character }
+                  className="bg-slate-500 text-shadow-none"
+                  value={ character }
+                >
+                  { character }
+                </option>
+              ))}
             </select>
           </span>
         </span>

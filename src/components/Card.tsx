@@ -7,7 +7,7 @@ interface CardProps {
   asc15: boolean;
   cardsFlipped: string[];
   setCardsFlipped: Dispatch<string[]>;
-  triesLeft: MutableRefObject<number>
+  triesLeftRef: MutableRefObject<number>;
   restart: boolean;
 }
 
@@ -17,7 +17,7 @@ const Card = ({
   asc15,
   cardsFlipped,
   setCardsFlipped,
-  triesLeft,
+  triesLeftRef,
   restart
 }: CardProps) => {
   const cardBackRef = useRef<HTMLImageElement|null>(null)
@@ -44,16 +44,16 @@ const Card = ({
   const handleClick = () => {
     if (!isFlipped.current &&
         cardsFlipped.length < 2 &&
-        triesLeft.current > 0) {
+        triesLeftRef.current > 0) {
       faceUp()
       setCardsFlipped(cardsFlipped.concat(cardName))
-      if (cardsFlipped.length == 1) triesLeft.current -= 1
+      if (cardsFlipped.length == 1)
+        setTimeout(() => triesLeftRef.current -= 1, faceDownMs)
     }
   }
 
   useEffect(() => {
     if (isFlipped.current) {
-      console.log("Resetting")
       faceDown()
     }
     cardBackRef.current?.classList.remove("reset-anim")
@@ -79,7 +79,7 @@ const Card = ({
         }
       }
     }
-  }, [cardsFlipped, setCardsFlipped, cardName, triesLeft])
+  }, [cardsFlipped, setCardsFlipped, cardName])
 
   return (
     <div

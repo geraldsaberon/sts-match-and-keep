@@ -1,23 +1,12 @@
-import { Dispatch, MutableRefObject } from "react";
-import { TRIES } from "../variables";
-
 interface ResetButtonProps {
   text: string;
-  setRestart: Dispatch<boolean>;
-  triesLeftRef: MutableRefObject<number>;
+  handleReset: () => void;
 }
 
-const ResetButton = ({ text, setRestart, triesLeftRef }: ResetButtonProps) => {
-  const handleClick = () => {
-    if (!triesLeftRef.current) {
-      triesLeftRef.current = TRIES
-      setRestart(true)
-    }
-  }
-
+const ResetButton = ({ text, handleReset }: ResetButtonProps) => {
   return (
     <button
-      onClick={ handleClick }
+      onClick={ handleReset }
       className="text-slate-50 px-4 py-1 bg-[#477447] rounded-lg shadow-md hover:scale-105 transition-transform"
     >
       { text }

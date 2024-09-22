@@ -1,5 +1,6 @@
-import { Dispatch, MutableRefObject, useEffect, useRef } from "react";
+import { Dispatch, MutableRefObject, useEffect, useState } from "react";
 import { Character } from "../types";
+import clsx from "clsx";
 
 interface CardProps {
   cardName: string;
@@ -20,32 +21,17 @@ const Card = ({
   triesLeftRef,
   restart
 }: CardProps) => {
-  const cardBackRef = useRef<HTMLImageElement|null>(null)
-  const cardFrontRef = useRef<HTMLImageElement|null>(null)
-  const isFlipped = useRef<boolean>(false)
-  const isMatched = useRef<boolean>(false)
+  const [isFlipped, setIsFlipped] = useState<boolean>(false)
+  const [isMatched, setIsMatched] = useState<boolean>(false)
 
   const faceDownMs = 500
 
-  const faceUp = () => {
-    cardBackRef.current?.classList.add("flipped")
-    cardFrontRef.current?.classList.add("flipped")
-    isFlipped.current = true
-  }
-
-  const faceDown = () => {
-    cardBackRef.current?.classList.remove("flipped")
-    cardFrontRef.current?.classList.remove("flipped")
-    cardFrontRef.current?.classList.remove("matched")
-    isFlipped.current = false
-    isMatched.current = false
-  }
-
   const handleClick = () => {
-    if (!isFlipped.current &&
+    if (!isFlipped &&
         cardsFlipped.length < 2 &&
-        triesLeftRef.current > 0) {
-      faceUp()
+        triesLeftRef.current > 0)
+    {
+      setIsFlipped(true)
       setCardsFlipped(cardsFlipped.concat(cardName))
       if (cardsFlipped.length == 1)
         setTimeout(() => triesLeftRef.current -= 1, faceDownMs)
@@ -53,33 +39,30 @@ const Card = ({
   }
 
   useEffect(() => {
-    if (isFlipped.current) {
-      faceDown()
-    }
-    cardBackRef.current?.classList.remove("reset-anim")
-    cardBackRef.current?.classList.add("reset-anim")
+    setIsFlipped(false)
+    setIsMatched(false)
   }, [character, asc15, restart])
 
   useEffect(() => {
     if (cardsFlipped.length == 2) {
-      if (cardsFlipped[0] === cardsFlipped[1]) {
-        if (isFlipped.current && cardName === cardsFlipped[0]) {
-          isMatched.current = true
-          setTimeout(() => {
-            cardFrontRef.current?.classList.replace("flipped", "matched")
-            setCardsFlipped([])
-          }, faceDownMs)
-        }
-      } else {
-        if (!isMatched.current) {
-          setTimeout(() => {
-            faceDown()
-            setCardsFlipped([])
-          }, faceDownMs)
-        }
+      if (isFlipped &&
+          cardsFlipped[0] === cardsFlipped[1] &&
+          cardName === cardsFlipped[0]) 
+      {
+        setTimeout(() => {
+          setIsMatched(true)
+          setCardsFlipped([])
+        }, faceDownMs)
+      }
+
+      else if (!isMatched) {
+        setTimeout(() => {
+          setIsFlipped(false)
+          setCardsFlipped([])
+        }, faceDownMs)
       }
     }
-  }, [cardsFlipped, setCardsFlipped, cardName])
+  }, [cardsFlipped, setCardsFlipped, cardName, isMatched, isFlipped])
 
   return (
     <div
@@ -90,15 +73,21 @@ const Card = ({
         src="/assets/cardback.png"
         alt="Card Back"
         width={ 128 }
-        className="card card-back w-full"
-        ref={ cardBackRef }
+        className={ clsx(
+          "card card-back w-full reset-anim",
+          isFlipped && "flipped",
+          isMatched && "matched")
+        }
       />
       <img
         src={ `/assets/${cardName}` }
         alt={ cardName }
         width={ 128 }
-        className="card card-front w-full"
-        ref={ cardFrontRef }
+        className={ clsx(
+          "card card-front w-full",
+          isFlipped && "flipped",
+          isMatched && "matched")
+        }
       />
     </div>
   )

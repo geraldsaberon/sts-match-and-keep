@@ -35,7 +35,7 @@ function App() {
         asc15={ asc15 }
         setAsc15={ setAsc15 }
       />
-      <div className="card-grid">
+      <div className="card-grid px-8 gap-x-2 gap-y-4 sm:gap-x-12">
         {cards.current.map((cardName, i) => (
           <Card
             key={ `${cardName}-${i}` }

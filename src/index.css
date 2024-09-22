@@ -14,8 +14,7 @@ body {
 @layer components {
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(4, 96px);
-    grid-gap: 16px 48px;
+    grid-template-columns: repeat(4, minmax(48px, 96px));
     justify-items: center;
     align-items: center;
   }

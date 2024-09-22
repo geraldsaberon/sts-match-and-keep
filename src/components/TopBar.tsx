@@ -20,9 +20,9 @@ const TopBar = ({ setCharacter, asc15, setAsc15 }: TopBarProps) => {
   return (
     <div className="w-full bg-[#394449] text-slate-200 h-14 px-4 drop-shadow-xl flex items-center justify-between text-shadow">
       <span className="flex space-x-8">
-        <span className="flex items-center space-x-4">
+        <span className="flex items-center sm:space-x-4">
           <span className="text-2xl select-none hidden sm:inline">🗝️</span>
-          <span className="sm:text-2xl">STS Match-and-Keep</span>
+          <span className="me-2 sm:me-0 sm:text-2xl">STS Match-and-Keep</span>
           <span className="text-slate-400 hover:text-slate-50 select-none">
             the {" "}
             <select

@@ -1,5 +1,6 @@
 import { ChangeEvent, Dispatch } from "react"
 import { Character } from "../types";
+import clsx from "clsx";
 
 interface TopBarProps {
   setCharacter: Dispatch<Character>;
@@ -48,11 +49,21 @@ const TopBar = ({ setCharacter, asc15, setAsc15 }: TopBarProps) => {
           <span className="text-2xl">🫙🧪</span>
         </span>
       </span>
-      <span className="space-x-4 select-none">
+      <span className="space-x-4 select-none relative">
         <span className="hidden sm:inline">🪜 22</span>
         <span
-          className="text-yellow-500 px-2 py-1 border-2 border-yellow-500 rounded-lg hover:bg-yellow-900 transition-colors cursor-pointer"
-          onClick={ handleAscChange }>🔥 { asc15 ? "15":"1"}</span>
+          className={ clsx(
+            "text-yellow-500 px-2 py-1 border-2 border-yellow-500 rounded-lg hover:bg-yellow-900 transition-colors cursor-pointer",
+            asc15 && "peer")
+          }
+          onClick={ handleAscChange }
+        >
+          🔥 { asc15 ? "15":"1"}
+        </span>
+        <span className="peer-hover:inline hidden absolute top-8 right-0 border-2 border-yellow-500 rounded-lg bg-yellow-900 w-64 p-2 text-center shadow-md">
+          <p className="text-yellow-300">Ascension 15 - Unfavorable Events</p>
+          <p className="text-sm">There are now two pairs of curses</p>
+        </span>
       </span>
 
       <span className="space-x-1 select-none hidden sm:inline">
